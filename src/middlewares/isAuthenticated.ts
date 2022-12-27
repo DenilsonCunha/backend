@@ -1,37 +1,42 @@
-import { NextFunction, Request, Response } from 'express'
+import {NextFunction, Request, Response} from 'express'
 import { verify } from 'jsonwebtoken'
 
-interface Payloud{
-    sub: string;
+interface Payload{
+  sub: string;
 }
 
 export function isAuthenticated(
-    req: Request,
-    res: Response,
-    next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ){
 
- // receber o token
- const authToken = req.headers.authorization;
+  // Receber o token
+  const authToken = req.headers.authorization;
 
- if(!authToken){
+  if(!authToken){
     return res.status(401).end();
- }
+  }
 
- const [, token] = authToken.split("")
+  const [, token] = authToken.split(" ")
 
- try{
-   // validar esse token
-   const { sub } = verify(
-    token,
-    process.env.JWT_SECRET
-   ) as Payloud;
+  
+  try{
+    //Validar esse token.
+    const { sub } = verify(
+      token,
+      process.env.JWT_SECRET
+    ) as Payload;
 
-   return next();
+    //Recuperar o id do token e colocar dentro de uma variavel user_id dentro do req.
+    req.user_id = sub;
 
- }catch(err){
+    return next();
+
+  }catch(err){
     return res.status(401).end();
- }
+  }
+
 
 
 }
