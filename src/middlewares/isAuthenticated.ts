@@ -30,7 +30,7 @@ export function isAuthenticated(
 
     //Recuperar o id do token e colocar dentro de uma variavel user_id dentro do req.
     req.user_id = sub;
-
+    
     return next();
 
   }catch(err){
